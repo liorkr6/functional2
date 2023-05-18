@@ -72,9 +72,6 @@ icycle list = foldr (:>) (icycle list) list
 naturals :: InfiniteList Int
 naturals = iiterate (+1) 0
 
-sample :: InfiniteList a -> [a]
-sample = take 10 . itoList
-
 integers :: InfiniteList Int
 integers = iiterate (\n -> if n > 0 then -n else -n+1) 0
 
@@ -102,9 +99,11 @@ itails (x :> xs) = (x :> xs) :> itails xs
 -- -- Section 4: Binary trees (no necessarily search trees)
 data Tree a = EmptyTree | Tree (Tree a) a (Tree a) deriving Show
 preOrder :: Tree a -> [a]
-preOrder tree = case tree of
-    EmptyTree 
--- postOrder :: Tree a -> [a]
+preOrder EmptyTree = []
+preOrder (Tree left val right) = [val] ++ preOrder left ++ preOrder right
+postOrder :: Tree a -> [a]
+postOrder EmptyTree = []
+postOrder (Tree left val right) = preOrder left ++ preOrder right ++ [val]
 -- inOrder :: Tree a -> [a]
 -- levelOrder :: Tree a -> [a]
 -- fromListLevelOrder :: [a] -> Tree a
