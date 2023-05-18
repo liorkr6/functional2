@@ -103,7 +103,22 @@ preOrder EmptyTree = []
 preOrder (Tree left val right) = [val] ++ preOrder left ++ preOrder right
 postOrder :: Tree a -> [a]
 postOrder EmptyTree = []
-postOrder (Tree left val right) = preOrder left ++ preOrder right ++ [val]
--- inOrder :: Tree a -> [a]
--- levelOrder :: Tree a -> [a]
--- fromListLevelOrder :: [a] -> Tree a
+postOrder (Tree left val right) = postOrder left ++ postOrder right ++ [val]
+inOrder :: Tree a -> [a]
+inOrder EmptyTree = []
+inOrder (Tree left val right) = inOrder left ++ [val] ++ inOrder right
+levelOrder :: Tree a -> [a]
+levelOrder tree = helperFunc [tree]
+  where
+    helperFunc [] = []
+    helperFunc (EmptyTree:ys) = helperFunc ys
+    helperFunc ((Tree left value right):ys) = value : helperFunc (ys ++ [left, right])
+fromListLevelOrder :: [a] -> Tree a
+fromListLevelOrder [] = EmptyTree
+fromListLevelOrder xs = go xs 0
+  where
+    go [] _ = EmptyTree
+    go ys i = if i >= length ys then EmptyTree else Tree (go ys leftIndex) (ys !! i) (go ys rightIndex)
+      where
+        leftIndex = 2 * i + 1
+        rightIndex = 2 * i + 2
